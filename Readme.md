@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Ekaterina Nekrylova](https://up.htmlacademy.ru/javascript/28/user/2141363).
-* Наставник: `Неизвестно`.
+* Наставник: [Паша Позняк](https://htmlacademy.ru/profile/id907403).
 
 ---
 
