@@ -1,42 +1,63 @@
-import {renderPictures} from './render-pictures.js';
-renderPictures();
+import {isEscapeKey} from './utils.js';
 
-const picContainer = document.querySelector('.big-picture');
-const picImage = picContainer.querySelector('.big-picture__img img');
-const picLikes = picContainer.querySelector('.likes-count');
-const picComments = picContainer.querySelector('.comments-count');
-const picDescription = picContainer.querySelector('.social__caption');
-const picCommentsCount = picContainer.querySelector('.social__comment-count');
-const picCommentsLoader = picContainer.querySelector('.comments-loader');
-// const commentsBigPhoto = picContainer.querySelector('.social__comments');
-// const commentsImage = commentsBigPhoto.querySelector('.social__pictures');
-// const commentsName = commentsBigPhoto.querySelector('.social__picture');
-// const commentsText = commentsBigPhoto.querySelector('.social__text');
+const pictureContainer = document.querySelector('.big-picture');
+const pictureImage = pictureContainer.querySelector('.big-picture__img img');
+const pictureLikes = pictureContainer.querySelector('.likes-count');
+const pictureComments = pictureContainer.querySelector('.comments-count');
+const pictureDescription = pictureContainer.querySelector('.social__caption');
+const pictureCommentsCount = pictureContainer.querySelector('.social__comment-count');
+const pictureCommentsLoader = pictureContainer.querySelector('.comments-loader');
+const commentsList = pictureContainer.querySelector('.social__comments');
+const comment = pictureContainer.querySelector('.social__comment');
+const closeModal = pictureContainer.querySelector('.big-picture__cancel');
+pictureCommentsCount.classList.add('hidden');
+pictureCommentsLoader.classList.add('hidden');
 
-const bigPicture = (data) => {
-  picImage.src = data.url;
-  picLikes.textContent = data.likes;
-  picComments.textContent = data.comments.length;
-  picDescription.textContent = data.description;
+
+const fillComment = (element) => {
+  const commentElement = comment.cloneNode(true);
+  commentElement.querySelector('.social__picture').src = element.avatar;
+  commentElement.querySelector('.social__picture').alt = element.name;
+  commentElement.querySelector('.social__text').textContent = element.message;
+  return commentElement;
 };
 
-// function createsFullComments (data.comment) {
-//   commentsImage.src = data.comment.avatar;
-//   commentsName.alt = data.comment.name;
-//   commentsText.textContent = data.comment.message;
-// }
+const renderComments = (comments) => {
+  comments.forEach((element) => commentsList.append(fillComment(element)));
+};
 
-export function renderFullPhoto (data) {
-  picContainer.classList.remove('hidden');
-  picCommentsCount.classList.add('hidden');
-  picCommentsLoader.classList.add('hidden');
+const fullBigPicture = (data) => {
+  pictureImage.src = data.url;
+  pictureLikes.textContent = data.likes;
+  pictureComments.textContent = data.comments.length;
+  pictureDescription.textContent = data.description;
+  renderComments(data.comments);
+};
 
-  bigPicture(data);
-  // createsFullComments (data.comment);
-}
+const openModalPhoto = () => {
+  pictureContainer.classList.remove('hidden');
+  document.body.classList.add('.modal-open');
+};
 
-// После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
+const closeModalPhoto = () => {
+  closeModal.addEventListener('click', () => {
+    pictureContainer.classList.add('hidden');
+  });
 
-// Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
+  document.addEventListener('keydown', (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      pictureContainer.classList.add('hidden');
+      document.body.classList.remove('.modal-open');
+    }
+  });
+};
 
-// Подключите модуль в проект
+const renderFullPhoto = (data) => {
+  commentsList.innerHTML = ' ';
+  openModalPhoto();
+  fullBigPicture(data);
+  closeModalPhoto();
+};
+
+export {renderFullPhoto};

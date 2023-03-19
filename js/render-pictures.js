@@ -20,7 +20,6 @@ const createPicture = (data) => {
   return pictureElement;
 };
 
-
 const renderPictures = () => {
   pictureSimilarElement.forEach((element) => pictureList.append(createPicture(element)));
 };
