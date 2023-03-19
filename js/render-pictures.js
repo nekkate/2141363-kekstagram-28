@@ -1,4 +1,5 @@
 import {createPosts} from './data.js';
+import {renderFullPhoto} from './render-full-photo.js';
 
 const pictureList = document.querySelector('.pictures');
 const pictureSimilarTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -11,8 +12,14 @@ const createPicture = (data) => {
   pictureElement.querySelector('.picture__comments').textContent = data.comments.length;
   pictureElement.querySelector('.picture__likes').textContent = data.likes;
 
+  pictureElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    renderFullPhoto(data);
+  });
+
   return pictureElement;
 };
+
 
 const renderPictures = () => {
   pictureSimilarElement.forEach((element) => pictureList.append(createPicture(element)));
