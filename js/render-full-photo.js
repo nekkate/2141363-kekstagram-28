@@ -9,7 +9,7 @@ const pictureCommentsCount = pictureContainer.querySelector('.social__comment-co
 const pictureCommentsLoader = pictureContainer.querySelector('.comments-loader');
 const commentsList = pictureContainer.querySelector('.social__comments');
 const comment = pictureContainer.querySelector('.social__comment');
-const closeModal = pictureContainer.querySelector('.big-picture__cancel');
+const closeModalButton = pictureContainer.querySelector('.big-picture__cancel');
 pictureCommentsCount.classList.add('hidden');
 pictureCommentsLoader.classList.add('hidden');
 
@@ -31,33 +31,36 @@ const fullBigPicture = (data) => {
   pictureLikes.textContent = data.likes;
   pictureComments.textContent = data.comments.length;
   pictureDescription.textContent = data.description;
+
   renderComments(data.comments);
 };
 
-const openModalPhoto = () => {
+const closeFullPhoto = () => {
+  pictureContainer.classList.add('hidden');
+  document.body.classList.remove('.modal-open');
+  closeModalButton.removeEventListener('click', onCloseFullPhotoButtonClick);
+  document.removeEventListener('keydown', onCloseKeydownDocument);
+};
+
+function onCloseFullPhotoButtonClick(evt) {
+  evt.preventDefault();
+  closeFullPhoto();
+}
+
+function onCloseKeydownDocument (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeFullPhoto();
+  }
+}
+
+const openFullPhoto = (data) => {
+  commentsList.innerHTML = ' ';
   pictureContainer.classList.remove('hidden');
   document.body.classList.add('.modal-open');
-};
-
-const closeModalPhoto = () => {
-  closeModal.addEventListener('click', () => {
-    pictureContainer.classList.add('hidden');
-  });
-
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      pictureContainer.classList.add('hidden');
-      document.body.classList.remove('.modal-open');
-    }
-  });
-};
-
-const renderFullPhoto = (data) => {
-  commentsList.innerHTML = ' ';
-  openModalPhoto();
   fullBigPicture(data);
-  closeModalPhoto();
+  closeModalButton.addEventListener('click', onCloseFullPhotoButtonClick);
+  document.addEventListener('keydown', onCloseKeydownDocument);
 };
 
-export {renderFullPhoto};
+export {openFullPhoto};

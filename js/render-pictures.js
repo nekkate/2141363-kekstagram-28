@@ -1,5 +1,5 @@
 import {createPosts} from './data.js';
-import {renderFullPhoto} from './render-full-photo.js';
+import {openFullPhoto} from './render-full-photo.js';
 
 const pictureList = document.querySelector('.pictures');
 const pictureSimilarTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -14,7 +14,7 @@ const createPicture = (data) => {
 
   pictureElement.addEventListener('click', (evt) => {
     evt.preventDefault();
-    renderFullPhoto(data);
+    openFullPhoto(data);
   });
 
   return pictureElement;
