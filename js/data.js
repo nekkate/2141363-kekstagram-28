@@ -12,7 +12,7 @@ const createRandomMessage = () => Array.from(new Set(Array.from({length: getRand
 
 const createComments = () => ({
   id: commentId++,
-  avatar: `img/${getRandomInteger(1,6)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(1,6)}.svg`,
   message: createRandomMessage(),
   name: getRandomElements(NAMES),
 }
