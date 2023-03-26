@@ -1,5 +1,7 @@
 import {isEscapeKey} from './utils.js';
 
+const COMMENTS_COUNT = 5;
+
 const pictureContainer = document.querySelector('.big-picture');
 const pictureImage = pictureContainer.querySelector('.big-picture__img img');
 const pictureLikes = pictureContainer.querySelector('.likes-count');
@@ -10,9 +12,9 @@ const pictureCommentsLoader = pictureContainer.querySelector('.comments-loader')
 const commentsList = pictureContainer.querySelector('.social__comments');
 const comment = pictureContainer.querySelector('.social__comment');
 const closeModalButton = pictureContainer.querySelector('.big-picture__cancel');
-pictureCommentsCount.classList.add('hidden');
-pictureCommentsLoader.classList.add('hidden');
 
+let showingComments = 0;
+let comments = [];
 
 const fillComment = (element) => {
   const commentElement = comment.cloneNode(true);
@@ -22,8 +24,22 @@ const fillComment = (element) => {
   return commentElement;
 };
 
-const renderComments = (comments) => {
-  comments.forEach((element) => commentsList.append(fillComment(element)));
+const fillCommentsCount = () => {
+  pictureCommentsCount.innerHTML = `${showingComments} из <span class="comments-count">${comments.length}</span> комментариев`;
+};
+
+const renderComments = () => {
+  const currentComments = comments.slice(showingComments, showingComments + COMMENTS_COUNT);
+  showingComments += COMMENTS_COUNT;
+  showingComments = Math.min(showingComments, comments.length);
+  currentComments.forEach((element) => commentsList.append(fillComment(element)));
+  fillCommentsCount ();
+
+  if (showingComments >= comments.length){
+    pictureCommentsLoader.classList.add ('hidden');
+  } else {
+    pictureCommentsLoader.classList.remove ('hidden');
+  }
 };
 
 const fullBigPicture = (data) => {
@@ -31,8 +47,6 @@ const fullBigPicture = (data) => {
   pictureLikes.textContent = data.likes;
   pictureComments.textContent = data.comments.length;
   pictureDescription.textContent = data.description;
-
-  renderComments(data.comments);
 };
 
 const closeFullPhoto = () => {
@@ -40,7 +54,14 @@ const closeFullPhoto = () => {
   document.body.classList.remove('.modal-open');
   closeModalButton.removeEventListener('click', onCloseFullPhotoButtonClick);
   document.removeEventListener('keydown', onCloseKeydownDocument);
+  showingComments = 0;
+  pictureCommentsLoader.removeEventListener('click', onPictureCommentsLoaderClick);
 };
+
+function onPictureCommentsLoaderClick (evt) {
+  evt.preventDefault();
+  renderComments();
+}
 
 function onCloseFullPhotoButtonClick(evt) {
   evt.preventDefault();
@@ -59,8 +80,11 @@ const openFullPhoto = (data) => {
   pictureContainer.classList.remove('hidden');
   document.body.classList.add('.modal-open');
   fullBigPicture(data);
+  comments = data.comments;
+  renderComments();
   closeModalButton.addEventListener('click', onCloseFullPhotoButtonClick);
   document.addEventListener('keydown', onCloseKeydownDocument);
+  pictureCommentsLoader.addEventListener('click', onPictureCommentsLoaderClick);
 };
 
 export {openFullPhoto};
