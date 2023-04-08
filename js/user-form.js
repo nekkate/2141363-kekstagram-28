@@ -1,37 +1,49 @@
-import {isEscapeKey} from './utils.js';
+import {activateScale, resetScale} from './user-form-scale.js';
+import {resetPristine, validatePristine, addPristine} from './user-form-valid.js';
 
 const uploadContainer = document.querySelector('.img-upload__overlay');
 const uploadFileInput = document.querySelector('.img-upload__input');
 const uploadFileCancel = document.querySelector('.img-upload__cancel');
+const form = document.querySelector('.img-upload__form');
 
-const closeUploadFile = () => {
-  uploadFileCancel.removeEventListener('click', onCloseUploadFileClick);
-  document.removeEventListener('keydown', onCloseUploadFileKeydown);
-  uploadContainer.classList.add('hidden');
-  document.body.classList.remove('.modal-open');
-  uploadFileInput.value = ' ';
-};
-
-const openUploadFile = () => {
-  uploadFileInput.addEventListener('change', () => {
-    uploadContainer.classList.remove('hidden');
-    document.body.classList.add('.modal-open');
-  });
-  uploadFileCancel.addEventListener('click', onCloseUploadFileClick);
-  document.addEventListener('keydown', onCloseUploadFileKeydown);
-};
-
-function onCloseUploadFileClick (evt) {
-  evt.preventDefault();
-  closeUploadFile();
-}
-
-function onCloseUploadFileKeydown (evt) {
-  if (isEscapeKey(evt)) {
+const onDocumentKeydown = (evt) => {
+  if (evt.key === 'Escape' && !evt.target.closest('.text__hashtags') && !evt.target.closest('.text__description')) {
     evt.preventDefault();
     closeUploadFile();
   }
-}
+};
 
-export {openUploadFile};
+const onCancelButtonClick = () => closeUploadFile();
+const onFileInputChange = () => openUploadFile();
+
+const onFormSubmit = (evt) => {
+  if(!validatePristine()) {
+  evt.preventDefault ();
+}
+};
+
+const openUploadFile = () => {
+  uploadContainer.classList.remove('hidden');
+  document.body.classList.add('.modal-open');
+  document.addEventListener('keydown', onDocumentKeydown);
+  activateScale();
+  addPristine();
+};
+
+const closeUploadFile = () => {
+  form.reset();
+  resetScale();
+  resetPristine();
+  uploadContainer.classList.add('hidden');
+  document.body.classList.remove('.modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
+const addFormAction = () => {
+  uploadFileInput.addEventListener('change', onFileInputChange);
+  uploadFileCancel.addEventListener('click', onCancelButtonClick);
+  form.addEventListener('submit', onFormSubmit);
+};
+
+export {addFormAction}
 
