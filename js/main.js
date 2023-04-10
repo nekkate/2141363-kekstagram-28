@@ -1,5 +1,5 @@
-import { renderPictures } from './render-pictures.js';
+import { getImageGata } from './render-pictures.js';
 import { addFormAction } from './user-form.js';
 
-renderPictures();
+getImageGata();
 addFormAction();

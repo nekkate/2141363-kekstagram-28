@@ -1,10 +1,10 @@
-import {createPosts} from './data.js';
 import {openFullPhoto} from './render-full-photo.js';
+import { getData} from './api.js';
 
+const GET_URL = 'https://28.javascript.pages.academy/kekstagram/data';
 const pictureList = document.querySelector('.pictures');
 const pictureSimilarTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const pictureSimilarElement = createPosts();
 
 const createPicture = (data) => {
   const pictureElement = pictureSimilarTemplate.cloneNode(true);
@@ -20,8 +20,15 @@ const createPicture = (data) => {
   return pictureElement;
 };
 
-const renderPictures = () => {
-  pictureSimilarElement.forEach((element) => pictureList.append(createPicture(element)));
+const renderPictures = (data) => {
+  data.forEach((item) => pictureList.append(createPicture(item)));
 };
 
-export {renderPictures};
+const onGetSuccess = (data) => renderPictures(data);
+const onGetFail = () => {
+
+};
+
+const getImageGata = () => getData(GET_URL, onGetSuccess, onGetFail);
+
+export {getImageGata};
