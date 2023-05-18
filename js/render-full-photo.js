@@ -18,10 +18,9 @@ let comments = [];
 
 const fillComment = (element) => {
   const commentElement = comment.cloneNode(true);
-  const img = document.querySelector('.social__picture');
-  img.src = element.avatar;
-  img.alt = element.name;
-  img.textContent = element.message;
+  commentElement.querySelector('.social__picture').src = element.avatar;
+  commentElement.querySelector('.social__picture').alt = element.name;
+  commentElement.querySelector('.social__text').textContent = element.message;
   return commentElement;
 };
 
@@ -82,6 +81,7 @@ const openFullPhoto = (data) => {
   document.body.classList.add('modal-open');
   fillBigPicture(data);
   comments = data.comments;
+  console.log(comments);
   renderComments();
   closeModalButton.addEventListener('click', onCloseFullPhotoButtonClick);
   document.addEventListener('keydown', onCloseKeydownDocument);
